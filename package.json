@@ -1,16 +1,15 @@
 {
-  "name": "instocki-api",
+  "name": "instock-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "InStock API server",
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "db:migrate": "knex migrate:latest",
     "db:seed": "knex seed:run"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
