@@ -2,11 +2,11 @@
   "name": "instock-server",
   "version": "1.0.0",
   "description": "InStock API server",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
     "db:migrate": "knex migrate:latest",
     "db:seed": "knex seed:run"
   },
