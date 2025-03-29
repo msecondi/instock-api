@@ -28,10 +28,9 @@ const oneWarehouse = async(req, res) => {
 const inventoryInWarehouse = async(req, res) => {
     try {
         const warehouseFound = await knex('warehouses')
-        .join("inventories", "inventories.warehouse_id", "warehouses.id")
-        .where({warehouse_id: req.params.warehouseId })
+        .join('inventories', 'inventories.warehouse_id', 'warehouses.id')
+        .where('warehouses.id', req.params.warehouseId)
         .select("inventories.id", "item_name", "category", "status", "quantity");
-
         if (!warehouseFound.length) {
             return res.status(404).send(`Requested warehouse not found. '${req.params.warehouseId}'`);
         }
