@@ -2,6 +2,18 @@ import initKnex from "knex";
 import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
+const inventories = async(req, res) => {
+    try {
+        const inventories = await knex('inventories').select('*');
+        if (!inventories.length) {
+            return res.status(404).send('Requested inventories not found.');
+        }
+        res.status(200).json(inventories);
+    } catch(error) {
+        res.status(400).send(`Error retrieving inventory information: ${error}`);
+    }
+}
+
 const singleInventory = async(req, res) => {
     try {
         const inventoryItem = await knex('inventories')
@@ -18,5 +30,6 @@ const singleInventory = async(req, res) => {
 }
 
 export {
+    inventories,
     singleInventory
 }
