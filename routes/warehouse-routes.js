@@ -11,4 +11,8 @@ warehouseRouter
     .route('/:warehouseId')
     .get(warehouseController.oneWarehouse)
 
+warehouseRouter
+    .route('/:warehouseId/inventories')
+    .get(warehouseController.inventoryInWarehouse)
+
 export default warehouseRouter;
