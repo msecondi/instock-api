@@ -10,9 +10,10 @@ warehouseRouter
 warehouseRouter
     .route('/:warehouseId')
     .get(warehouseController.oneWarehouse)
+    .patch(warehouseController.updateWarehouse);
 
 warehouseRouter
     .route('/:warehouseId/inventories')
-    .get(warehouseController.inventoryInWarehouse)
+    .get(warehouseController.inventoryInWarehouse);
 
 export default warehouseRouter;
