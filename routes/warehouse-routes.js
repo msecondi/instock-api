@@ -10,6 +10,7 @@ warehouseRouter
 warehouseRouter
     .route('/:warehouseId')
     .get(warehouseController.oneWarehouse)
+    .patch(warehouseController.updateWarehouse)
 
 warehouseRouter
     .route('/:warehouseId/inventories')
