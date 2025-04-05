@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import initKnex from "knex";
 import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
@@ -34,6 +35,8 @@ export {
     inventories,
     singleInventory
 =======
+=======
+>>>>>>> 5ebe94af48cc5f81e40f8a18e50a378b08281520
 import initKnex from "knex";
 import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
@@ -68,5 +71,8 @@ const singleInventory = async(req, res) => {
 export {
     inventories,
     singleInventory
+<<<<<<< HEAD
+>>>>>>> 5ebe94af48cc5f81e40f8a18e50a378b08281520
+=======
 >>>>>>> 5ebe94af48cc5f81e40f8a18e50a378b08281520
 }
