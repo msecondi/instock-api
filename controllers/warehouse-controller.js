@@ -21,22 +21,22 @@ const oneWarehouse = async(req, res) => {
         }
         res.status(200).json(warehouseFound[0]);
     } catch(error) {
-        res.status(400).send(`Error retrieving Warehouses: ${error}`);
+        res.status(400).send(`Error retrieving warehouses: ${error}`);
     }
 }
 
 const inventoryInWarehouse = async(req, res) => {
     try {
         const warehouseFound = await knex('warehouses')
-        .join('inventories', 'inventories.warehouse_id', 'warehouses.id')
-        .where('warehouses.id', req.params.warehouseId)
-        .select("inventories.id", "item_name", "category", "status", "quantity");
+            .join('inventories', 'inventories.warehouse_id', 'warehouses.id')
+            .where('warehouses.id', req.params.warehouseId)
+            .select("inventories.id", "item_name", "category", "status", "quantity");
         if (!warehouseFound.length) {
             return res.status(404).send(`Requested warehouse not found. '${req.params.warehouseId}'`);
         }
         res.status(200).json(warehouseFound);
     } catch(error) {
-        res.status(400).send(`Error retrieving Warehouses: ${error}`);
+        res.status(400).send(`Error retrieving warehouses: ${error}`);
     }
 }
 
@@ -89,8 +89,8 @@ const updateWarehouse = async(req, res) => {
 
         // select desired table and update with validated data
         const selectedWarehouse = await knex('warehouses')
-        .where({id: req.params.warehouseId })
-        .update(req.body);
+            .where({id: req.params.warehouseId })
+            .update(req.body);
 
         if (!selectedWarehouse) {
             return res.status(404).send(`Requested warehouse not found. '${req.params.warehouseId}'`);
@@ -100,12 +100,28 @@ const updateWarehouse = async(req, res) => {
 
         //fetch updated warehouse and send back to user
         const updatedWarehouse = await knex('warehouses')
-        .select('id', 'warehouse_name', 'address', 'city', 'country', 'contact_name', 'contact_position', 'contact_phone', 'contact_email')
-        .where({id: req.params.warehouseId });
+            .select('id', 'warehouse_name', 'address', 'city', 'country', 'contact_name', 'contact_position', 'contact_phone', 'contact_email')
+            .where({id: req.params.warehouseId });
 
         res.status(200).json(updatedWarehouse[0])
     } catch (error) {
-        res.status(400).send(`Error updating Warehouse: ${error}`);
+        res.status(400).send(`Error updating warehouse: ${error}`);
+    }
+}
+
+const deleteWarehouse = async(req, res) => {
+    try {
+        const warehouse = await knex('warehouses')
+            .where('warehouses.id', req.params.warehouseId)
+            .delete();
+
+        if(!warehouse) {
+            return res.status(404).send(`Requested warehouse '${req.params.warehouseId}' was either already deleted or does not exist.`)
+        }
+
+        res.sendStatus(204);
+    } catch(error) {
+        res.status(400).send(`Error deleting warehouse: ${error}`);
     }
 }
   
@@ -113,5 +129,6 @@ export {
     allWarehouses,
     oneWarehouse,
     inventoryInWarehouse,
-    updateWarehouse
+    updateWarehouse,
+    deleteWarehouse
   };
