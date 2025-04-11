@@ -2,13 +2,15 @@ import initKnex from "knex";
 import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
+import Warehouse from "../model/warehouse.js"; // Warehouse class for validation
+
 //declare functions for validation
 function hasKey(keyName, object) {
     const objPair = Object.entries(object); //creates an array of arrays with key, value pairs
     //check if object contains 'keyName' as a key and return it
     return objPair.find( element => element[0] === keyName);
 }
-
+    
 function validPhoneNumber(contactPhoneNo) {
     
     //parse to string if user entered int
@@ -26,8 +28,16 @@ function validPhoneNumber(contactPhoneNo) {
     }
 }
 
-function validEmail(objArr) {
-
+function validEmailAddress(contactEmail) {
+    //use regex to ensure proper email formatting is used by user
+    if(!contactEmail.match(/^[\w.-]+@[\w.-]+\.\w+$/)) {
+        return {
+            validEmail: false
+        }
+    }
+    return {
+        validEmail: true
+    }
 }
 
 function validWarehouse(obj) {
@@ -36,22 +46,23 @@ function validWarehouse(obj) {
     
     //gather keys requested by user
     const requestedObjKeys = Object.keys(obj);
-    console.log(requestedObjKeys);
 
     //declare array to capture all keys that are missing to later display to user
-    let missingKeysArr = []; 
+    // let missingKeysArr = []; 
+    let missingKeysArr = objKeys.filter(key => !requestedObjKeys.includes(key));
+    console.log(missingKeysArr);
     //iterate through required keys array and ensure requested object includes each one. 
-    for(let i = 0; i < objKeys.length; i++) {
-        if(!requestedObjKeys.includes(objKeys[i])){
-            //add missing key to array
-            missingKeysArr.push(objKeys[i]);
-        }
-    }
+    // for(let i = 0; i < objKeys.length; i++) {
+    //     if(!requestedObjKeys.includes(objKeys[i])){
+    //         //add missing key to array
+    //         missingKeysArr.push(objKeys[i]);
+    //     }
+    // }
+    console.log("missingkeysArr: " + missingKeysArr);
     //if any keys are missing, return object displaying input not valid, with all missing values
     if(missingKeysArr.length) {
         return {
             validKeys: false,
-            validValues: true, //to not throw an error
             missingKeys: missingKeysArr
         };
     }
@@ -67,7 +78,8 @@ function validWarehouse(obj) {
             emptyValues.push(value);
         }
     })
-    console.log(emptyValues);
+    console.log("emptyValuesArr: " + emptyValues);
+    //if there are values within 'emptyValues', return 'validValues: false' and pass array with all values that need correction
     if(emptyValues.length) {
         return {
             validKeys: true,
@@ -78,15 +90,35 @@ function validWarehouse(obj) {
     
     //ADD PHONE & EMAIL VALIDATION FUNCTIONS
     //since req.body has been validated for correct keys & values, pass corresponding value to be validated for formatting
-    validPhoneNumber(req.body.contact_phone)
+    //validate 'contact_phone' key
+    let properFormat = validPhoneNumber(obj.contact_phone);
+    console.log(properFormat);
+    if(!properFormat.validPhoneNo) {
+        return {
+            validKeys: true,
+            validValues: true,
+            phoneFormat: false
+        }
+    }
 
-    //EMAIL?!?!?!?!
+    //validate 'contact_email' key
+    properFormat = validEmailAddress(obj.contact_email);
+    console.log(properFormat);
+    if(properFormat.validPhoneNo) {
+        return {
+            validKeys: true,
+            validValues: true,
+            phoneFormat: true,
+            emailFormat: false
+        }
+    }
 
-
-    //passed all validation, return keys and values true
+    //passed all validation, return all true
     return { 
         validKeys: true,
-        validValues: true
+        validValues: true,
+        phoneFormat: true,
+        emailFormat: true
     };
 }
 
@@ -101,15 +133,21 @@ const allWarehouses = async(req, res) => {
 }
 
 const createWarehouse = async(req, res) => {
-    const result = validWarehouse(req.body);
-    console.log(result)
-    console.log(req.body.contact_phone)
-    if(!result.validKeys){
-        res.send(`Keys missing from requested warehouse: ${result.missingKeys.map(e => ` '${e}'`)}`);
+    // const result = validWarehouse(req.body);
+    // console.log(result)
+    // // console.log(req.body.contact_phone)
+    // if(!result.validKeys){
+    //     res.send(`Keys missing from requested warehouse: ${result.missingKeys.map(e => ` '${e}'`)}`);
+    // }
+    // else if(!result.validValues){
+    //     res.send(`Values missing from requested warehouse key: '${result.missingValues.map(e => `{ ${e[0]}: '${e[1]}' }`)}'`);
+    // }
+    const requestedWarehouse = new Warehouse(req.body);
+    const valid = requestedWarehouse.validWarehouse();
+    if(valid.errorMessage) {
+        return res.send(valid.errorMessage);
     }
-    if(!result.validValues){
-        res.send(`Values missing from requested warehouse key: '${result.missingValues.map(e => `{ ${e[0]}: '${e[1]}' }`)}'`);
-    }
+    res.send("You did it!")
 }
 
 const oneWarehouse = async(req, res) => {
