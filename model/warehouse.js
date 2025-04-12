@@ -47,9 +47,34 @@ class Warehouse {
         }
     }
 
+    //check to see if any keys are 'unknown'
+    filterUnknownKeys() {
+        // create an empty filtered object to be populated with only the keys needed
+        const filtered = {};
+        //create an array to show user which keys are not being used
+        let unknownKeys = [];
+        //iterate through keys of user requested object
+        Object.keys(this.obj).forEach((key) => {
+            //if key is within requiredKeys, add it to 'filtered' object
+            if (this.requiredKeys.includes(key)) {
+                filtered[key] = this.obj[key];
+            } else {
+                //otherwise, omit that key and push to array
+                unknownKeys.push(key);
+            }
+        });
+        this.obj = filtered;
+        if(unknownKeys.length){
+            console.warn(`Keys ommitted from warehouse: '${unknownKeys}'`)
+        }
+    }
+
     validateWarehouse(crudType) {
+        //ensure no unknown keys by filtering 'this.obj'
+        this.filterUnknownKeys();
         //check what type of validation is required based on paramter
         if(crudType === 'create') { //create NEW warehouse
+
             //instantiated array that gives all keys requested by user
             const requestedKeys = Object.keys(this.obj);
             
@@ -87,6 +112,7 @@ class Warehouse {
             };
         }
         else if(crudType === 'update') { //update EXISTING warehouse
+            console.log(this.obj)
             // check if any values are empty using 'checkEmptyValues' class method
             const hasEmptyValues = this.checkEmptyValues();
             //if object returned includes 'errorMessage' key, return it
@@ -114,7 +140,8 @@ class Warehouse {
             }
             //passed all validation, return true
             return { 
-                success: true
+                success: true,
+
             };
         }
         else { //did not specify 'create' or 'update'

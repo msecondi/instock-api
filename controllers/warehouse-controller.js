@@ -28,7 +28,7 @@ const createWarehouse = async(req, res) => {
         //VALIDATION END
 
         //passed validation, now 'create' warehouse
-        const data = await knex('warehouses').insert(req.body);
+        const data = await knex('warehouses').insert(requestedWarehouse.obj);
         // assign new id to variable
         const newWarehouseId = data[0];
         //now retrieve new warehouse information and send as a response
@@ -89,7 +89,7 @@ const updateWarehouse = async(req, res) => {
         //select desired table and update with validated data
         const selectedWarehouse = await knex('warehouses')
             .where({id: req.params.warehouseId })
-            .update(req.body);
+            .update(requestedWarehouse.obj);
 
         if (!selectedWarehouse) {
             return res.status(404).send(`Requested warehouse not found. '${req.params.warehouseId}'`);
