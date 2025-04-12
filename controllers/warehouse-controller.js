@@ -6,7 +6,8 @@ import Warehouse from "../model/warehouse.js"; // Warehouse class for validation
 
 const allWarehouses = async(req, res) => {
     try {
-        const data = await knex('warehouses');
+        const data = await knex('warehouses')
+            .select('id', 'warehouse_name', 'address', 'city', 'country', 'contact_name', 'contact_position', 'contact_phone', 'contact_email');
         res.status(200).json(data);
     } catch(error) {
         res.status(400).send(`Error retrieving Warehouses: ${error}`);
@@ -45,8 +46,9 @@ const createWarehouse = async(req, res) => {
 const oneWarehouse = async(req, res) => {
     try {
         const warehouseFound = await knex('warehouses')
+            .select('id', 'warehouse_name', 'address', 'city', 'country', 'contact_name', 'contact_position', 'contact_phone', 'contact_email')
             .where({id: req.params.warehouseId });
-
+                
         if (!warehouseFound.length) {
             return res.status(404).send(`Requested warehouse not found. '${req.params.warehouseId}'`);
         }
