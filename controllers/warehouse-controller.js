@@ -117,7 +117,7 @@ const deleteWarehouse = async(req, res) => {
         if(!warehouse) {
             return res.status(404).send(`Requested warehouse '${req.params.warehouseId}' was either already deleted or does not exist.`)
         }
-
+        //204 - No Content response
         res.sendStatus(204);
     } catch(error) {
         res.status(400).send(`Error deleting warehouse: ${error}`);
