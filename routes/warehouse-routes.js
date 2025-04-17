@@ -5,7 +5,8 @@ const warehouseRouter = express.Router();
 
 warehouseRouter
     .route("/")
-    .get(warehouseController.allWarehouses);
+    .get(warehouseController.allWarehouses)
+    .post(warehouseController.createWarehouse);
 
 warehouseRouter
     .route('/:warehouseId')

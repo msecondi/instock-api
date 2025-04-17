@@ -109,9 +109,22 @@ const updateWarehouse = async(req, res) => {
     }
 }
   
+const createWarehouse = async (req, res) => {
+    try {
+      const newWarehouse = req.body;
+  
+      await knex("warehouses").insert(newWarehouse);
+  
+      res.status(201).json({ message: "Warehouse created successfully" });
+    } catch (error) {
+      console.error("Error creating warehouse:", error);
+      res.status(500).json({ error: "Failed to create warehouse" });
+    }
+  };
 export {
     allWarehouses,
     oneWarehouse,
     inventoryInWarehouse,
-    updateWarehouse
+    updateWarehouse,
+    createWarehouse
   };
