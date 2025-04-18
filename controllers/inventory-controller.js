@@ -29,7 +29,24 @@ const singleInventory = async(req, res) => {
     }
 }
 
+const deleteInventory = async(req, res) => {
+    try {
+        const item = await knex('inventories')
+            .where('inventories.id', req.params.inventoryId)
+            .delete();
+
+        if(!item) {
+            return res.status(404).send(`Requested inventory item '${req.params.inventoryId}' was either already deleted or does not exist.`)
+        }
+        //204 - No Content response
+        res.sendStatus(204);
+    } catch(error) {
+        res.status(400).send(`Error deleting inventory item: ${error}`);
+    }
+}
+
 export {
     inventories,
-    singleInventory
+    singleInventory,
+    deleteInventory
 }
