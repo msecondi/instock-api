@@ -5,7 +5,8 @@ const inventoryRouter = express.Router();
 
 inventoryRouter
     .route("/")
-    .get(inventoryController.inventories);
+    .get(inventoryController.inventories)
+    .post(inventoryController.createInventory);
 
 inventoryRouter
     .route('/categories')
