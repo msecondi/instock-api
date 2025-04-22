@@ -45,8 +45,22 @@ const deleteInventory = async(req, res) => {
     }
 }
 
+const getCategories = async(req, res) => {
+    try {
+        const categories = await knex('inventories')
+            .distinct('category')
+            .orderBy('category');
+
+        const categoryList = categories.map(item => item.category);
+        res.status(200).json(categoryList);
+    } catch(error) {
+        res.status(400).send('Error retrieving categories: ' + error);
+    }
+}
+
 export {
     inventories,
     singleInventory,
-    deleteInventory
+    deleteInventory,
+    getCategories
 }
