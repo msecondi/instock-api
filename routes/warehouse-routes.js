@@ -11,7 +11,8 @@ warehouseRouter
 warehouseRouter
     .route('/:warehouseId')
     .get(warehouseController.oneWarehouse)
-    .patch(warehouseController.updateWarehouse);
+    .patch(warehouseController.updateWarehouse)
+    .delete(warehouseController.deleteWarehouse);
 
 warehouseRouter
     .route('/:warehouseId/inventories')

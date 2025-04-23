@@ -8,7 +8,13 @@ inventoryRouter
     .get(inventoryController.inventories);
 
 inventoryRouter
+    .route('/categories')
+    .get(inventoryController.getCategories);
+
+inventoryRouter
     .route('/:inventoryId')
-    .get(inventoryController.singleInventory);
+    .get(inventoryController.singleInventory)
+    .delete(inventoryController.deleteInventory)
+    .patch(inventoryController.updateInventory);
 
 export default inventoryRouter;
