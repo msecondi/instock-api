@@ -70,20 +70,24 @@ const updateInventory = async(req, res) => {
         if (isNaN(quantity)) {
             return res.status(400).json({ error: 'Quantity must be a number.' });
         }
+        const inventoryExists = await knex('inventories')
+            .where({id: req.params.inventoryId});
+
         // validation to check if inventory item exists 
-        if (!inventoryExists) {
-            return res.status(404).jason({ error: 'Inventory item not found' });
+        if (!inventoryExists.length) {
+            return res.status(404).json({ error: 'Inventory item not found' });
         }
         // check if warehouse exists 
-        const warehouseExists = await knex('warehouse')
-        .where({id: warehouse_id}) 
-        .first();
+        const warehouseExists = await knex('warehouses')
+            .where({id: warehouse_id}) 
+            .first();
+        
         if (!warehouseExists) {
-            return res.status(400).jason({ error: 'Warehouse not found' });
+            return res.status(400).json({ error: 'Warehouse not found' });
         }
 
         await knex('inventories')
-            .where({ id: req.params.invetoryId })
+            .where({ id: req.params.inventoryId })
             .update({
                 warehouse_id,
                 item_name,
@@ -94,6 +98,7 @@ const updateInventory = async(req, res) => {
             });
 
         const updatedInventory = await knex('inventories')
+            .select('id', 'warehouse_id', 'item_name', 'description', 'category', 'status', 'quantity')
             .where({ id: req.params.inventoryId })
             .first();
 
