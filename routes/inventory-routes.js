@@ -15,6 +15,7 @@ inventoryRouter
 inventoryRouter
     .route('/:inventoryId')
     .get(inventoryController.singleInventory)
-    .delete(inventoryController.deleteInventory);
+    .delete(inventoryController.deleteInventory)
+    .patch(inventoryController.updateInventory);
 
 export default inventoryRouter;

@@ -124,11 +124,14 @@ const deleteWarehouse = async(req, res) => {
     }
 }
   
+
 export {
     allWarehouses,
     createWarehouse,
     oneWarehouse,
     inventoryInWarehouse,
     updateWarehouse,
+    createWarehouse,
     deleteWarehouse
-};
+  };
+  
