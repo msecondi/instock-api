@@ -131,7 +131,6 @@ export {
     oneWarehouse,
     inventoryInWarehouse,
     updateWarehouse,
-    createWarehouse,
     deleteWarehouse
   };
   

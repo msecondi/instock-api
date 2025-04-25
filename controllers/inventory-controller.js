@@ -93,6 +93,7 @@ const createInventory = async(req, res) => {
             
         // Get newly created inventory
         const newInventory = await knex('inventories')
+            .select('id', 'warehouse_id', 'item_name', 'description', 'category', 'status', 'quantity')
             .where({ id: newInventoryId })
             .first();
             
