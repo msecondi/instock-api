@@ -5,8 +5,12 @@ const inventoryRouter = express.Router();
 
 inventoryRouter
     .route("/")
-    .post(inventoryController.addInventory)
-    .get(inventoryController.inventories);
+    .get(inventoryController.inventories)
+    .post(inventoryController.createInventory);
+
+inventoryRouter
+    .route('/categories')
+    .get(inventoryController.getCategories);
 
 inventoryRouter
     .route('/:inventoryId')

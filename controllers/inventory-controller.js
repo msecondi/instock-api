@@ -45,13 +45,68 @@ const deleteInventory = async(req, res) => {
     }
 }
 
-const updateInventory = async (req, res) => {
+const getCategories = async(req, res) => {
+    try {
+        const categories = await knex('inventories')
+            .distinct('category')
+            .orderBy('category');
+
+        const categoryList = categories.map(item => item.category);
+        res.status(200).json(categoryList);
+    } catch(error) {
+        res.status(400).send('Error retrieving categories: ' + error);
+    }
+}
+
+const createInventory = async(req, res) => {
+    try {
+        const { warehouse_id, item_name, description, category, status, quantity } = req.body;
+        
+        // Validationto check if all fields are provided
+        if (!warehouse_id || !item_name || !description || !category || !status || quantity === undefined) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+        
+        // Validation to check if quantity is a number
+        if (isNaN(quantity)) {
+            return res.status(400).json({ error: 'Quantity must be a number' });
+        }
+        
+        // Check if warehouse exists
+        const warehouseExists = await knex('warehouses')
+            .where({ id: warehouse_id })
+            .first();
+            
+        if (!warehouseExists) {
+            return res.status(400).json({ error: 'Warehouse not found' });
+        }
+        
+        const [newInventoryId] = await knex('inventories') //insert new inventory item
+            .insert({
+                warehouse_id,
+                item_name,
+                description,
+                category,
+                status,
+                quantity
+            });
+            
+        // Get newly created inventory
+        const newInventory = await knex('inventories')
+            .select('id', 'warehouse_id', 'item_name', 'description', 'category', 'status', 'quantity')
+            .where({ id: newInventoryId })
+            .first();
+            
+        res.status(201).json(newInventory);
+    } catch(error) {
+        res.status(400).send(`Error creating inventory: ${error}`);
+    }
+}
+
+const updateInventory = async(req, res) => { 
     try {
         const { warehouse_id, item_name, description, category, status, quantity } = req.body;
 
-
-
-        
         // Validate required fields
         if (!warehouse_id || !item_name || !description || !category || !status || quantity === undefined) {
             return res.status(400).json({ error: 'All fields are required.' });
@@ -107,5 +162,7 @@ export {
     inventories,
     singleInventory,
     deleteInventory,
+    getCategories,
+    createInventory,
     updateInventory
 }
