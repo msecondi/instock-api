@@ -102,43 +102,10 @@ const updateInventory = async (req, res) => {
         res.status(400).send(`Error updating inventory item: ${error}`);
     }
 };
-
-const addInventory = async (req, res) => {
-    try {
-      const { warehouse_id, item_name, description, category, status, quantity } = req.body;
-  
-      if (!warehouse_id || !item_name || !description || !category || !status || quantity === undefined) {
-        return res.status(400).json({ error: 'All fields are required.' });
-      }
-  
-      if (isNaN(quantity)) {
-        return res.status(400).json({ error: 'Quantity must be a number.' });
-      }
-  
-      const warehouseExists = await knex('warehouses').where({ id: warehouse_id }).first();
-      if (!warehouseExists) {
-        return res.status(400).json({ error: 'Warehouse not found' });
-      }
-  
-      const [newInventory] = await knex('inventories').insert({
-        warehouse_id,
-        item_name,
-        description,
-        category,
-        status,
-        quantity
-      }).returning('*');
-  
-      res.status(201).json(newInventory);
-    } catch (error) {
-      res.status(400).send(`Error adding inventory item: ${error}`);
-    }
-}
   
 export {
     inventories,
     singleInventory,
     deleteInventory,
-    updateInventory,
-    addInventory
+    updateInventory
 }
