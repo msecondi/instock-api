@@ -5,10 +5,17 @@ const inventoryRouter = express.Router();
 
 inventoryRouter
     .route("/")
-    .get(inventoryController.inventories);
+    .get(inventoryController.inventories)
+    .post(inventoryController.createInventory);
+
+inventoryRouter
+    .route('/categories')
+    .get(inventoryController.getCategories);
 
 inventoryRouter
     .route('/:inventoryId')
-    .get(inventoryController.singleInventory);
+    .get(inventoryController.singleInventory)
+    .delete(inventoryController.deleteInventory)
+    .patch(inventoryController.updateInventory);
 
 export default inventoryRouter;
