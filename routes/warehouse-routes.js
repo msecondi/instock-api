@@ -15,6 +15,10 @@ warehouseRouter
     .delete(warehouseController.deleteWarehouse);
 
 warehouseRouter
+    .route('/sort/:sortBy/order/:orderBy')
+    .get(warehouseController.sortWarehouses);
+
+warehouseRouter
     .route('/:warehouseId/inventories')
     .get(warehouseController.inventoryInWarehouse);
 

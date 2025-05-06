@@ -11,11 +11,16 @@ inventoryRouter
 inventoryRouter
     .route('/categories')
     .get(inventoryController.getCategories);
-
+    
 inventoryRouter
     .route('/:inventoryId')
     .get(inventoryController.singleInventory)
     .delete(inventoryController.deleteInventory)
     .patch(inventoryController.updateInventory);
+
+inventoryRouter
+    .route('/sort/:sortBy/order/:orderBy')
+    .get(inventoryController.sortInventory);
+
 
 export default inventoryRouter;

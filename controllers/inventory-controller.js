@@ -73,7 +73,7 @@ const createInventory = async(req, res) => {
         }
         
         // Check if warehouse exists
-        const warehouseExists = await knex('warehouses')
+        const warehouseExists = await knex('inventories')
             .where({ id: warehouse_id })
             .first();
             
@@ -126,7 +126,7 @@ const updateInventory = async(req, res) => {
         }
 
         // ✅ Check if warehouse exists
-        const warehouseExists = await knex('warehouses')
+        const warehouseExists = await knex('inventories')
             .where({ id: warehouse_id })
             .first();
 
@@ -157,6 +157,21 @@ const updateInventory = async(req, res) => {
         res.status(400).send(`Error updating inventory item: ${error}`);
     }
 };
+
+const sortInventory = async(req, res) => {
+    try {
+        if(req.params.orderBy === 'asc' || req.params.orderBy === 'desc') {
+            const sortedInventory = await knex('inventories')
+                .orderBy(req.params.sortBy, req.params.orderBy === 'asc' ? 'asc' : req.params.orderBy === 'desc' ? 'desc' : 'asc');
+            
+            res.send(sortedInventory);
+        } else {
+            res.status(404).send(`Invalid 'order by' parameter: ${req.params.orderBy}`);
+        }
+    } catch(error) {
+        res.status(400).send(`Error sorting inventories: ${error}`);
+    }
+}
   
 export {
     inventories,
@@ -164,5 +179,6 @@ export {
     deleteInventory,
     getCategories,
     createInventory,
-    updateInventory
+    updateInventory,
+    sortInventory
 }
