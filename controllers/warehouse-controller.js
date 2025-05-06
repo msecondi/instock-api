@@ -123,6 +123,21 @@ const deleteWarehouse = async(req, res) => {
         res.status(400).send(`Error deleting warehouse: ${error}`);
     }
 }
+
+const sortWarehouses = async(req, res) => {
+    try {
+        if(req.params.orderBy === 'asc' || req.params.orderBy === 'desc') {
+            const sortedWarehouses = await knex('warehouses')
+                .orderBy(req.params.sortBy, req.params.orderBy === 'asc' ? 'asc' : req.params.orderBy === 'desc' ? 'desc' : 'asc');
+            
+            res.send(sortedWarehouses);
+        } else {
+            res.status(404).send(`Invalid parameter: ${req.params.orderBy}`);
+        }
+    } catch(error) {
+        res.status(400).send(`Error sorting warehouses: ${error}`);
+    }
+}
   
 
 export {
@@ -131,6 +146,7 @@ export {
     oneWarehouse,
     inventoryInWarehouse,
     updateWarehouse,
-    deleteWarehouse
+    deleteWarehouse,
+    sortWarehouses
   };
   
